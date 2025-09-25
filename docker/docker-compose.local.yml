@@ -1,0 +1,56 @@
+services:
+  nodejs:
+    image: node:24-alpine3.21
+    container_name: nodejs_app_container
+    working_dir: /var/www/html
+    volumes:
+      - ./../nodejs_app:/var/www/html
+    ports:
+      - "${NODEJS_PORT}:3000"
+    tty: true
+    stdin_open: true
+    # comment this line if you don't want to run the frontend automatically
+    # or when you are starting the container for the first time
+    command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
+
+  php:
+    build:
+      context: ./builds/php
+      dockerfile: Dockerfile
+    container_name: php_app_container
+    working_dir: /var/www/html
+    volumes:
+      - ./../php_app:/var/www/html
+    ports:
+      - "9000:9000"
+    command:
+      - php-fpm
+  
+  nginx:
+    volumes:
+      - ./builds/nginx/local:/etc/nginx/templates
+    depends_on:
+      - nodejs
+      - php
+
+  mysql:
+    image: mysql:lts-oracle
+    container_name: mysql_db_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+
+  redis:
+    image: redis:8.2.1-alpine
+    container_name: redis_cache_container
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./data/redis:/data

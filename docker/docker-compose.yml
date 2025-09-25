@@ -1,0 +1,10 @@
+services:
+  nginx:
+    image: nginx:1.29-alpine
+    container_name: nginx_server_container
+    volumes:
+      - ./../nodejs_app:/usr/src/app
+      - ./../php_app:/var/www/html
+    ports:
+      - "${NGINX_PORT}:80"
+

@@ -1,0 +1,60 @@
+# nginx configurations
+
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+
+upstream backend_network {
+  server php:9000;
+}
+
+upstream frontend {
+  server nodejs:3000;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name localhost be.mine.com www.be.mine.com;
+
+  root /var/www/html/php_application/public;
+
+  client_max_body_size 50M;
+
+  index index.php index.html index.htm;
+
+  location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_pass backend_network;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+
+  error_log  /var/log/nginx/error.log;
+  access_log /var/log/nginx/access.log;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name fe.mine.com www.fe.mine.com;
+
+  client_max_body_size 50M;
+
+  location / {
+    proxy_pass http://frontend;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+  }
+
+  error_log  /var/log/nginx/vue-error.log;
+  access_log /var/log/nginx/vue-access.log;
+}
