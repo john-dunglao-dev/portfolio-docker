@@ -1,0 +1,6 @@
+[submodule "nodejs_app/vuejs"]
+	path = nodejs_app/vuejs
+	url = git@github.com:john-dunglao-dev/portfolio-vue.git
+[submodule "php_app/php_application"]
+	path = php_app/php_application
+	url = git@github.com:john-dunglao-dev/portfolio-laravel.git
