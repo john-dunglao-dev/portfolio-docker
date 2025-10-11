@@ -9,4 +9,8 @@ RUN apk update && apk add --no-cache \
     bash \
     git
 
-RUN npm install -g vite-bundle-analyzer
+# vitest and jsdom are for unit testing
+RUN npm install -g \ 
+    vite-bundle-analyzer \
+    vitest \
+    jsdom

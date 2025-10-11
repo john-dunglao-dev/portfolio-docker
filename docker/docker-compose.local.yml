@@ -9,11 +9,12 @@ services:
       - ./../nodejs_app:/var/www/html
     ports:
       - "${NODEJS_PORT}:3000"
+      - "${NODEJS_PREVIEW_PORT}:3030"
     tty: true
     stdin_open: true
     # comment this line if you don't want to run the frontend automatically
     # or when you are starting the container for the first time
-    command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
+    # command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
 
   php:
     build:
