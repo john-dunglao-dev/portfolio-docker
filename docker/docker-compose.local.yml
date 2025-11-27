@@ -16,6 +16,23 @@ services:
     # or when you are starting the container for the first time
     # command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
 
+  reactjs:
+    build:
+      context: ./builds/nodejs
+      dockerfile: Dockerfile
+    container_name: reactjs_app_container
+    working_dir: /var/www/html
+    volumes:
+      - ./../nodejs_app:/var/www/html
+    ports:
+      - "${REACTJS_PORT}:3003"
+      - "${REACTJS_PREVIEW_PORT}:3033"
+    tty: true
+    stdin_open: true
+    # comment this line if you don't want to run the frontend automatically
+    # or when you are starting the container for the first time
+    # command: /bin/sh -c "cd /var/www/html/reactjs && npm install && npm run dev"
+
   php:
     build:
       context: ./builds/php

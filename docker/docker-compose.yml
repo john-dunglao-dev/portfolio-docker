@@ -2,6 +2,11 @@ services:
   nginx:
     image: nginx:1.29-alpine
     container_name: nginx_server_container
+    environment:
+      - NODEJS_PORT=${NODEJS_PORT}
+      - NODEJS_PREVIEW_PORT=${NODEJS_PREVIEW_PORT}
+      - REACTJS_PORT=${REACTJS_PORT}
+      - REACTJS_PREVIEW_PORT=${REACTJS_PREVIEW_PORT}
     volumes:
       - ./../nodejs_app:/usr/src/app
       - ./../php_app:/var/www/html

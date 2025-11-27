@@ -10,11 +10,19 @@ upstream backend_network {
 }
 
 upstream frontend {
-  server nodejs:3000;
+  server nodejs:${NODEJS_PORT};
 }
 
 upstream frontend_preview {
-  server nodejs:3030;
+  server nodejs:${NODEJS_PREVIEW_PORT};
+}
+
+upstream react {
+  server reactjs:${REACTJS_PORT};
+}
+
+upstream react_preview {
+  server reactjs:${REACTJS_PREVIEW_PORT};
 }
 
 server {
@@ -80,4 +88,42 @@ server {
 
   error_log  /var/log/nginx/vue-error.log;
   access_log /var/log/nginx/vue-access.log;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name react.mine.local www.react.mine.local;
+
+  client_max_body_size 50M;
+
+  location / {
+    proxy_pass http://react;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+  }
+
+  error_log  /var/log/nginx/react-error.log;
+  access_log /var/log/nginx/react-access.log;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name reactpreview.mine.local www.reactpreview.mine.local;
+
+  client_max_body_size 50M;
+
+  location / {
+    proxy_pass http://react_preview;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+  }
+
+  error_log  /var/log/nginx/react-error.log;
+  access_log /var/log/nginx/react-access.log;
 }
