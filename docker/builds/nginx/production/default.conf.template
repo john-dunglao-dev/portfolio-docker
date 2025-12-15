@@ -5,52 +5,74 @@ proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $scheme;
 
-upstream backend_prod {
-    server php:9000;
+upstream backend_network {
+  server php:9000;
 }
 
-# Redirect HTTP to HTTPS
 server {
-    listen 80;
-    server_name ${NGINX_HOST};
+  listen 80;
+  listen [::]:80;
 
-    # Redirect all HTTP requests to HTTPS
-    return 301 https://$host$request_uri;
+    # ! Change server_name to your desired domain names
+#   server_name localhost be.mine.local www.be.mine.local;
+
+  root /var/www/html/php_application/public;
+
+  client_max_body_size 50M;
+
+  index index.php index.html index.htm;
+
+  location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_pass backend_network;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+
+  error_log  /var/log/nginx/error.log;
+  access_log /var/log/nginx/access.log;
 }
 
-# Main server block for HTTPS
 server {
-    listen 443 ssl;
-    server_name ${NGINX_HOST};
-    root /var/www/backend/public;
+  listen 80;
+  listen [::]:80;
 
-    client_max_body_size 50M;
+    # ! Change server_name to your desired domain names
+  server_name fe.mine.local www.fe.mine.local;
 
-    index index.php index.html index.htm;
+  root /usr/src/app/vuejs/dist;
+  index index.html;
 
-    ssl_certificate /etc/ssl/certs/my_certificate.crt;  # Adjust the path to your SSL certificate
-    ssl_certificate_key /etc/ssl/private/my_private_key.pem;  # Adjust the path to your SSL key
+  client_max_body_size 50M;
 
-    location / {
-        root /var/www/frontend-vue/dist;
-        try_files $uri $uri/ /index.html;
-    }
+  location / {
+    try_files $uri /index.html;
+  }
 
-    location /api {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+  error_log  /var/log/nginx/vue-error.log;
+  access_log /var/log/nginx/vue-access.log;
+}
 
-    location /storage {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+server {
+  listen 80;
+  listen [::]:80;
 
-    location ~ \.php$ {
-        include fastcgi_params;
-        fastcgi_pass backend;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_path_info;
-    }
+    # ! Change server_name to your desired domain names
+  server_name react.mine.local www.react.mine.local;
 
-    error_log  /var/log/nginx/error.log;
-    access_log /var/log/nginx/access.log;
+  root /usr/src/app/reactjs/dist;
+  index index.html;
+
+  client_max_body_size 50M;
+
+  location / {
+    try_files $uri /index.html;
+  }
+
+  error_log  /var/log/nginx/react-error.log;
+  access_log /var/log/nginx/react-access.log;
 }
