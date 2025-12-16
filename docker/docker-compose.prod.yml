@@ -1,6 +1,8 @@
 services:
   nginx:
-    image: johnflorentinodev/portfolio-nginx-registry:latest
+    platform: linux/amd64,linux/arm64
+    image: johnflorentinodev/portfolio-nginx-registry:${GITHUB_SHA:-latest}
 
   php:
-    image: johnflorentinodev/portfolio-php-registry:latest
+    platform: linux/amd64,linux/arm64
+    image: johnflorentinodev/portfolio-php-registry:${GITHUB_SHA:-latest}

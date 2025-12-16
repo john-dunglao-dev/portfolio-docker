@@ -1,44 +1,66 @@
 services:
   nginx:
-    image: johnflorentinodev/portfolio-nginx-registry:latest
+    image: johnflorentinodev/portfolio-nginx-registry:${GITHUB_SHA:-latest}
     container_name: nginx_server_container
+    restart: always
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - php
+      php:
+        condition: service_healthy
     networks:
-      - php_backend
+      - frontend
 
   php:
-    image: johnflorentinodev/portfolio-php-registry:latest
+    image: johnflorentinodev/portfolio-php-registry:${GITHUB_SHA:-latest}
     env_file: .env.production
     container_name: php_app_container
+    restart: always
     command:
       - php-fpm
+    healthcheck:
+      test: ["CMD-SHELL", "pidof php-fpm || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
-      - php_backend
+      - frontend
+      - backend
 
   mysql:
     image: mysql:lts-oracle
     container_name: mysql_db_container
     restart: always
     env_file: .env.production
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - php_backend
+      - backend
 
   redis:
     image: redis:8.2.1-alpine
     container_name: redis_cache_container
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     volumes:
-      - ./data/redis:/data
+      - redis_data:/data
     networks:
-      - php_backend
+      - backend
   
 networks:
-  php_backend:
+  frontend:
+  backend:
 
 volumes:
   mysql_data:
+  redis_data:
