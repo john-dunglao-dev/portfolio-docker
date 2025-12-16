@@ -44,7 +44,7 @@ server {
     # ! Change server_name to your desired domain names
   server_name fe.mine.local www.fe.mine.local;
 
-  root /usr/src/app/vuejs/dist;
+  root /usr/share/nginx/html/vue;
   index index.html;
 
   client_max_body_size 50M;
@@ -64,7 +64,7 @@ server {
     # ! Change server_name to your desired domain names
   server_name react.mine.local www.react.mine.local;
 
-  root /usr/src/app/reactjs/dist;
+  root /usr/share/nginx/html/react;
   index index.html;
 
   client_max_body_size 50M;

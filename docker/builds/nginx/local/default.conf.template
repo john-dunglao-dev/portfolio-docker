@@ -5,26 +5,6 @@ proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $scheme;
 
-upstream backend_network {
-  server php:9000;
-}
-
-upstream frontend {
-  server nodejs:${NODEJS_PORT};
-}
-
-upstream frontend_preview {
-  server nodejs:${NODEJS_PREVIEW_PORT};
-}
-
-upstream react {
-  server reactjs:${REACTJS_PORT};
-}
-
-upstream react_preview {
-  server reactjs:${REACTJS_PREVIEW_PORT};
-}
-
 server {
   listen 80;
   listen [::]:80;
@@ -39,7 +19,7 @@ server {
 
   location ~ \.php$ {
     include fastcgi_params;
-    fastcgi_pass backend_network;
+    fastcgi_pass php:9000;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     fastcgi_param PATH_INFO $fastcgi_path_info;
   }
@@ -61,7 +41,7 @@ server {
   client_max_body_size 50M;
 
   location / {
-    proxy_pass http://frontend;
+    proxy_pass http://nodejs:${NODEJS_PORT};
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection 'upgrade';
@@ -80,7 +60,7 @@ server {
   client_max_body_size 50M;
 
   location / {
-    proxy_pass http://frontend_preview;
+    proxy_pass http://nodejs:${NODEJS_PREVIEW_PORT};
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection 'upgrade';
@@ -99,7 +79,7 @@ server {
   client_max_body_size 50M;
 
   location / {
-    proxy_pass http://react;
+    proxy_pass http://reactjs:${REACTJS_PORT};
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection 'upgrade';
@@ -118,7 +98,7 @@ server {
   client_max_body_size 50M;
 
   location / {
-    proxy_pass http://react_preview;
+    proxy_pass http://reactjs:${REACTJS_PREVIEW_PORT};
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection 'upgrade';

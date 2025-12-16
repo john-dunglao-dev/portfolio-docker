@@ -1,0 +1,47 @@
+# use PHP 8.3
+FROM php:8.3-fpm
+
+# Set aliases for commonly used tools
+RUN echo "alias ll='ls -la'" >> ~/.bashrc
+
+# Install common php extension dependencies
+RUN apt-get update && apt-get install -y \
+    libfreetype-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    zlib1g-dev \
+    libzip-dev \
+    libbz2-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libjpeg-dev \
+    libonig-dev \
+    libreadline-dev \
+    libtidy-dev \
+    libxslt-dev \
+    libicu-dev \
+    unzip \
+    default-mysql-client
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
+RUN docker-php-ext-install -j$(nproc) gd
+RUN docker-php-ext-install \
+    intl \
+    iconv \
+    bcmath \
+    opcache \
+    calendar \
+    mbstring \
+    pdo_mysql \
+    zip \
+    xml
+
+# install composer
+COPY --from=composer:2.8.12 /usr/bin/composer /usr/local/bin/composer
+
+# Install Laravel Installer -- uncomment only if you need the Laravel installer
+RUN composer global require laravel/installer
+ 
+# Add composer global bin to PATH
+ENV PATH="${PATH}:/root/.composer/vendor/bin"

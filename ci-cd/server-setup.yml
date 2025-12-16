@@ -1,0 +1,44 @@
+services:
+  nginx:
+    image: johnflorentinodev/portfolio-nginx-registry:latest
+    container_name: nginx_server_container
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - php
+    networks:
+      - php_backend
+
+  php:
+    image: johnflorentinodev/portfolio-php-registry:latest
+    env_file: .env.production
+    container_name: php_app_container
+    command:
+      - php-fpm
+    networks:
+      - php_backend
+
+  mysql:
+    image: mysql:lts-oracle
+    container_name: mysql_db_container
+    restart: always
+    env_file: .env.production
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - php_backend
+
+  redis:
+    image: redis:8.2.1-alpine
+    container_name: redis_cache_container
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - php_backend
+  
+networks:
+  php_backend:
+
+volumes:
+  mysql_data:

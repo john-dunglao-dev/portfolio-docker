@@ -1,0 +1,46 @@
+# ---------- React build stage ----------
+FROM node:24-alpine3.21 AS react-builder
+
+WORKDIR /react
+
+# Copy package files
+COPY ./nodejs_app/reactjs/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy app source
+COPY ./nodejs_app/reactjs .
+
+# Build React app
+RUN npm run build
+
+# ---------- Vue build stage ----------
+FROM node:24-alpine3.21 AS vue-builder
+
+WORKDIR /vue
+
+# Copy package files
+COPY ./nodejs_app/vuejs/package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy app source
+COPY ./nodejs_app/vuejs .
+
+# Build Vue app
+RUN npm run build
+
+# ---------- Nginx runtime stage ----------
+FROM nginx:1.29-alpine
+
+# Remove default static files
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy React and Vue build outputs into Nginx
+COPY --from=react-builder /react/dist /usr/share/nginx/html/react
+COPY --from=vue-builder /vue/dist   /usr/share/nginx/html/vue
+
+# Copy the templates into nginx templates
+COPY ./docker/builds/nginx/production/* /etc/nginx/templates/*

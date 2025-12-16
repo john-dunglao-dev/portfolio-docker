@@ -1,0 +1,2 @@
+# ! This is deprecated. We now use image: in docker-compose file
+FROM redis:8.2.1-alpine

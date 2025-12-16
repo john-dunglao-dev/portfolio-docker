@@ -1,17 +1,6 @@
 services:
-  reactjs:
-    working_dir: /dist
-    volumes:
-      - reactjs_dist:/dist
-  nodejs:
-    working_dir: /dist
-    volumes:
-      - vuejs_dist:/dist
   nginx:
-    volumes:
-      - reactjs_dist:/usr/src/app/reactjs/dist:ro
-      - vuejs_dist:/usr/src/app/vuejs/dist:ro
+    image: johnflorentinodev/portfolio-nginx-registry:latest
 
-volumes:
-  reactjs_dist:
-  vuejs_dist:
+  php:
+    image: johnflorentinodev/portfolio-php-registry:latest
