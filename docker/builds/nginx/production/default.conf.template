@@ -15,7 +15,7 @@ server {
 
   server_name php.johnflorentinodunglao.com www.php.johnflorentinodunglao.com;
 
-  root /var/www/html/php_application/public;
+  root /var/www/html/public;
 
   client_max_body_size 50M;
 

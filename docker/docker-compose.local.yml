@@ -59,7 +59,7 @@ services:
   php:
     working_dir: /var/www/html
     volumes:
-      - ./../php_app:/var/www/html
+      - ./../php_app/php_application:/var/www/html
     command:
       - php-fpm
     networks:
