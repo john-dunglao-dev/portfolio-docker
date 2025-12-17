@@ -1,6 +1,7 @@
 services:
   nginx:
     image: johnflorentinodev/portfolio-nginx-registry:${GITHUB_SHA:-latest}
+    platform: linux/amd64
     container_name: nginx_server_container
     restart: always
     ports:
@@ -14,6 +15,7 @@ services:
 
   php:
     image: johnflorentinodev/portfolio-php-registry:${GITHUB_SHA:-latest}
+    platform: linux/amd64
     env_file: .env.production
     container_name: php_app_container
     restart: always
