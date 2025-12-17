@@ -45,4 +45,4 @@ COPY --from=react-builder /react/dist /usr/share/nginx/html/react
 COPY --from=vue-builder /vue/dist   /usr/share/nginx/html/vue
 
 # Copy the templates into nginx templates
-COPY ./docker/builds/nginx/production/* /etc/nginx/templates/*
+COPY ./docker/builds/nginx/production /etc/nginx/templates
