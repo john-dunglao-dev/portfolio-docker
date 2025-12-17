@@ -71,9 +71,10 @@ jobs:
           script: |
             export GITHUB_SHA=${{ github.sha }}
             cd ~/app
-            docker compose -f server-setup.yml pull
             docker compose -f server-setup.yml down
-            docker compose -f server-setup.yml up -d --build
             docker image prune -f
+
+            docker compose -f server-setup.yml pull
+            docker compose -f server-setup.yml up -d --remove-orphans
             echo "Deployment to GCP VM completed."
     
