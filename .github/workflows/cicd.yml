@@ -22,6 +22,11 @@ jobs:
           submodules: recursive
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN_GITHUB }}
 
+      - name: Check out submodule branches
+        run: |
+          git submodule foreach 'git checkout main || :'
+          git submodule foreach 'git pull origin main || :'
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
