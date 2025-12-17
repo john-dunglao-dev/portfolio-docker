@@ -60,6 +60,7 @@ jobs:
           target: "~/app/"
           strip_components: 1
           timeout: 120s
+          overwrite: true
 
       - name: Deploy to GCP VM via SSH
         uses: appleboy/ssh-action@v1

@@ -49,3 +49,7 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 WORKDIR /var/www/html
 
 COPY ./php_app .
+
+WORKDIR /var/www/html/php_application
+
+RUN composer install
