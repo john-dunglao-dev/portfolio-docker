@@ -72,7 +72,7 @@ jobs:
             export GITHUB_SHA=${{ github.sha }}
             cd ~/app
             docker compose -f server-setup.yml down
-            docker image prune -f
+            docker system prune -f
 
             docker compose -f server-setup.yml pull
             docker compose -f server-setup.yml up -d --remove-orphans
