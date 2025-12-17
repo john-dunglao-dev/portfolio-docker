@@ -14,3 +14,8 @@ production-push-php:
 production-push-nginx:
 	GITHUB_SHA=$(GITHUB_SHA) $(COMMAND) $(COMPOSE_FILES) push nginx
 
+production-build:
+	GITHUB_SHA=$(GITHUB_SHA) $(COMMAND) $(COMPOSE_FILES) build
+
+production-push:
+	GITHUB_SHA=$(GITHUB_SHA) $(COMMAND) $(COMPOSE_FILES) push

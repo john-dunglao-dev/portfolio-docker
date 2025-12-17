@@ -4,7 +4,8 @@ FROM node:24-alpine3.21 AS react-builder
 WORKDIR /react
 
 # Copy package files
-COPY ./nodejs_app/reactjs/package*.json ./
+COPY ./nodejs_app/reactjs/package.json ./
+COPY ./nodejs_app/reactjs/package-lock.json ./
 
 # Install dependencies
 RUN npm ci
@@ -21,7 +22,8 @@ FROM node:24-alpine3.21 AS vue-builder
 WORKDIR /vue
 
 # Copy package files
-COPY ./nodejs_app/vuejs/package*.json ./
+COPY ./nodejs_app/vuejs/package.json ./
+COPY ./nodejs_app/vuejs/package-lock.json ./
 
 # Install dependencies
 RUN npm ci

@@ -25,15 +25,10 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build and push PHP
+      - name: Build and push docker-compose.prod.yml containers
         run: |
-          make production-build-php ENV=production GITHUB_SHA=${{ github.sha }}
-          make production-push-php ENV=production GITHUB_SHA=${{ github.sha }}
-
-      - name: Build and push Nginx
-        run: |
-          make production-build-nginx ENV=production GITHUB_SHA=${{ github.sha }}
-          make production-push-nginx ENV=production GITHUB_SHA=${{ github.sha }}
+          make production-build ENV=production GITHUB_SHA=${{ github.sha }}
+          make production-push ENV=production GITHUB_SHA=${{ github.sha }}
 
   deploy:
     name: (CD) Deploy to GCP VM Server
