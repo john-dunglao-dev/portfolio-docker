@@ -52,3 +52,5 @@ COPY --from=vue-builder /vue/dist   /usr/share/nginx/html/vue
 
 # Copy the templates into nginx templates
 COPY ./docker/builds/nginx/production /etc/nginx/templates
+
+RUN nginx -t

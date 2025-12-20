@@ -3,7 +3,7 @@ upstream php_backend {
     server php:9000;
 }
 
---- HTTP: ACME challenge + redirect to HTTPS ---
+# --- HTTP: ACME challenge + redirect to HTTPS ---
 server {
   listen 80;
   listen [::]:80;
@@ -32,8 +32,8 @@ server {
   listen [::]:80;
   server_name php.johnflorentinodunglao.com www.php.johnflorentinodunglao.com;
 
-  include /etc/nginx/templates/configs/ssl.conf*;
-  include /etc/nginx/templates/configs/headers.conf;
+  # include /etc/nginx/templates/configs/ssl.conf*;
+  # include /etc/nginx/templates/configs/headers.conf;
 
   root /var/www/html/public;
   index index.php index.html index.htm;
@@ -65,8 +65,8 @@ server {
   listen [::]:80;
   server_name vue.johnflorentinodunglao.com www.vue.johnflorentinodunglao.com;
 
-  include /etc/nginx/templates/configs/ssl.conf*;
-  include /etc/nginx/templates/configs/headers.conf;
+  # include /etc/nginx/templates/configs/ssl.conf*;
+  # include /etc/nginx/templates/configs/headers.conf;
 
   root /usr/share/nginx/html/vue;
   index index.html;
@@ -95,8 +95,8 @@ server {
   listen [::]:80;
   server_name johnflorentinodunglao.com www.johnflorentinodunglao.com;
 
-  include /etc/nginx/templates/configs/ssl.conf*;
-  include /etc/nginx/templates/configs/headers.conf;
+  # include /etc/nginx/templates/configs/ssl.conf*;
+  # include /etc/nginx/templates/configs/headers.conf;
 
   root /usr/share/nginx/html/react;
   index index.html;
