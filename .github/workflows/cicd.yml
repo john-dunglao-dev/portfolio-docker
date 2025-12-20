@@ -56,7 +56,7 @@ jobs:
           host: ${{ secrets.GCP_VM_IP }}
           username: ${{ secrets.GCP_VM_USER }}
           key: ${{ secrets.GCP_VM_SSH_KEY }}
-          source: "ci-cd/server-setup.yml,certbot-initial.yml,certbot-renewal.yml"
+          source: "ci-cd/server-setup.yml,certbot-initial.yml,certbot-renewal.yml,Makefile"
           target: "~/app/"
           strip_components: 1
           timeout: 120s
@@ -71,10 +71,5 @@ jobs:
           script: |
             export GITHUB_SHA=${{ github.sha }}
             cd ~/app
-            docker compose -f server-setup.yml down
-            docker system prune -af
-
-            docker compose -f server-setup.yml pull
-            docker compose -f server-setup.yml --env-file .env.production up -d --remove-orphans
-            echo "Deployment to GCP VM completed."
+            make server-deploy
     
