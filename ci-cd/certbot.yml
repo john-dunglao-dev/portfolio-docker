@@ -2,7 +2,7 @@ services:
   # initial Certbot service to obtain SSL certificates
   certbot:
     image: certbot/certbot
-    container_name: certbot_container
+    container_name: certbot_initial_container
     volumes:
       - certbot_webroot:/var/www/certbot
       - nginx_ssl_certs:/etc/letsencrypt
@@ -26,7 +26,7 @@ services:
   # this service is scheduled to run in the remote server via cron job
   certbot-renewal:
     image: certbot/certbot
-    container_name: certbot_container
+    container_name: certbot_renewal_container
     volumes:
       - certbot_webroot:/var/www/certbot
       - nginx_ssl_certs:/etc/letsencrypt

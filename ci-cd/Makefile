@@ -11,12 +11,12 @@ server-deploy:
 
 certbot-obtain:
 	echo "Obtaining SSL certificates..."
-	docker compose -f server-setup.yml -f certbot.yml up certbot
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production up certbot
 	echo "Obtained SSL certificates successfully."
 
 certbot-renew:
 	echo "Renewing SSL certificates..."
-	docker compose -f server-setup.yml -f certbot.yml up certbot-renewal
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production up certbot-renewal
 	echo "Renewed SSL certificates successfully."
 
 command:
