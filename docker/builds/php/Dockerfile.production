@@ -23,12 +23,15 @@ RUN apt-get update && apt-get install -y \
     unzip \
     default-mysql-client
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg
 
 RUN docker-php-ext-install -j$(nproc) gd
-RUN docker-php-ext-install \
+RUN docker-php-ext-install -j$(nproc) \
     intl \
-    iconv \
     bcmath \
     opcache \
     calendar \
@@ -40,9 +43,6 @@ RUN docker-php-ext-install \
 # install composer
 COPY --from=composer:2.8.12 /usr/bin/composer /usr/local/bin/composer
 
-# Install Laravel Installer -- uncomment only if you need the Laravel installer
-RUN composer global require laravel/installer
- 
 # Add composer global bin to PATH
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
@@ -52,4 +52,5 @@ COPY ./php_app/php_application .
 
 RUN composer install
 
-RUN chown -R www-data:www-data ./
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache

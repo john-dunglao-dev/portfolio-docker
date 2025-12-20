@@ -7,6 +7,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - nginx_ssl_certs:/etc/letsencrypt
+      - certbot_webroot:/var/www/certbot
     depends_on:
       php:
         condition: service_healthy
@@ -58,6 +61,39 @@ services:
       - redis_data:/data
     networks:
       - backend
+
+  # certbot:
+  # image: certbot/certbot
+  # container_name: certbot_container
+  # volumes:
+  #   - nginx_ssl_certs:/etc/letsencrypt
+  #   - certbot_webroot:/var/www/certbot
+  # entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet --deploy-hook \"docker exec nginx_server_container nginx -s reload\"; sleep 12h & wait $${!}; done;'"
+  # restart: always
+  # networks:
+  #   - frontend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot_container
+    volumes:
+      - certbot_webroot:/var/www/certbot
+      - nginx_ssl_certs:/etc/letsencrypt
+    command: >
+      certonly
+      --webroot
+      -w /var/www/certbot
+      --email ${CERTBOT_EMAIL}
+      --agree-tos
+      --dry-run
+      -d johnflorentinodunglao.com
+      -d www.johnflorentinodunglao.com
+      -d php.johnflorentinodunglao.com
+      -d www.php.johnflorentinodunglao.com
+      -d vue.johnflorentinodunglao.com
+      -d www.vue.johnflorentinodunglao.com
+    networks:
+      - frontend
   
 networks:
   frontend:
@@ -66,3 +102,5 @@ networks:
 volumes:
   mysql_data:
   redis_data:
+  nginx_ssl_certs:
+  certbot_webroot:

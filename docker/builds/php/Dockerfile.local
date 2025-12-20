@@ -23,15 +23,17 @@ RUN apt-get update && apt-get install -y \
     unzip \
     default-mysql-client
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg
 
 RUN docker-php-ext-install -j$(nproc) gd
-RUN docker-php-ext-install \
+RUN docker-php-ext-install -j$(nproc) \
     intl \
-    iconv \
     bcmath \
     opcache \
-    calendar \
     mbstring \
     pdo_mysql \
     zip \
