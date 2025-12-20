@@ -62,17 +62,6 @@ services:
     networks:
       - backend
 
-  # certbot:
-  # image: certbot/certbot
-  # container_name: certbot_container
-  # volumes:
-  #   - nginx_ssl_certs:/etc/letsencrypt
-  #   - certbot_webroot:/var/www/certbot
-  # entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet --deploy-hook \"docker exec nginx_server_container nginx -s reload\"; sleep 12h & wait $${!}; done;'"
-  # restart: always
-  # networks:
-  #   - frontend
-
   certbot:
     image: certbot/certbot
     container_name: certbot_container
@@ -86,7 +75,6 @@ services:
       -w /var/www/certbot
       --email ${CERTBOT_EMAIL}
       --agree-tos
-      --dry-run
       -d johnflorentinodunglao.com
       -d www.johnflorentinodunglao.com
       -d php.johnflorentinodunglao.com
