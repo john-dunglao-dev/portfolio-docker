@@ -1,0 +1,49 @@
+services:
+  # initial Certbot service to obtain SSL certificates
+  certbot:
+    image: certbot/certbot
+    container_name: certbot_container
+    volumes:
+      - certbot_webroot:/var/www/certbot
+      - nginx_ssl_certs:/etc/letsencrypt
+    env_file: .env.production
+    command: >
+      certonly
+      --webroot
+      -w /var/www/certbot
+      --email ${CERTBOT_EMAIL}
+      --agree-tos
+      -d johnflorentinodunglao.com
+      -d www.johnflorentinodunglao.com
+      -d php.johnflorentinodunglao.com
+      -d www.php.johnflorentinodunglao.com
+      -d vue.johnflorentinodunglao.com
+      -d www.vue.johnflorentinodunglao.com
+    networks:
+      - frontend
+
+  # recurring Certbot service to renew SSL certificates
+  # this service is scheduled to run in the remote server via cron job
+  certbot-renewal:
+    image: certbot/certbot
+    container_name: certbot_container
+    volumes:
+      - certbot_webroot:/var/www/certbot
+      - nginx_ssl_certs:/etc/letsencrypt
+    command: >
+      renew
+      --webroot
+      -w /var/www/certbot
+      --quiet
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    external: true
+
+volumes:
+  certbot_webroot:
+    external: true
+  nginx_ssl_certs:
+    external: true

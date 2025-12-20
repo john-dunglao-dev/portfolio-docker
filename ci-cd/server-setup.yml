@@ -85,11 +85,17 @@ services:
       - frontend
   
 networks:
+  # frontend network is defined to connect other docker-compose files/services
   frontend:
+    name: portfolio-frontend
+    driver: bridge
   backend:
 
 volumes:
   mysql_data:
   redis_data:
+  # these volumes is defined to share SSL certificates with Nginx and Certbot services
   nginx_ssl_certs:
+    name: nginx_ssl_certs
   certbot_webroot:
+    name: certbot_webroot
