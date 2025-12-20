@@ -3,15 +3,14 @@ upstream php_backend {
     server php:9000;
 }
 
-# --- HTTP: ACME challenge + redirect to HTTPS ---
+# ------------------------------
+# PHP Laravel HTTP Redirect and ACME Challenge
+# ------------------------------
 server {
   listen 80;
   listen [::]:80;
 
-  server_name \
-    johnflorentinodunglao.com www.johnflorentinodunglao.com \
-    php.johnflorentinodunglao.com www.php.johnflorentinodunglao.com \
-    vue.johnflorentinodunglao.com www.vue.johnflorentinodunglao.com;
+  server_name php.johnflorentinodunglao.com www.php.johnflorentinodunglao.com;
 
   # ACME challenge location
   location /.well-known/acme-challenge/ {
@@ -56,10 +55,30 @@ server {
 }
 
 # ------------------------------
+# Vue SPA HTTP Redirect and ACME Challenge
+# ------------------------------
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name vue.johnflorentinodunglao.com www.vue.johnflorentinodunglao.com;
+
+  # ACME challenge location
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  # Redirect all other traffic to HTTPS
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+# ------------------------------
 # Vue SPA HTTPS
 # ------------------------------
 server {
-  server_name vue.johnflorentinodunglao.com www.vue.johnflorentinodunglao.com;
+  # server_name vue.johnflorentinodunglao.com www.vue.johnflorentinodunglao.com;
 
   # include /etc/nginx/templates/configs/ssl.conf*;
   # include /etc/nginx/templates/configs/headers.conf;
@@ -84,10 +103,30 @@ server {
 }
 
 # ------------------------------
+# React SPA HTTP Redirect and ACME Challenge
+# ------------------------------
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name johnflorentinodunglao.com www.johnflorentinodunglao.com;
+
+  # ACME challenge location
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  # Redirect all other traffic to HTTPS
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+# ------------------------------
 # React SPA HTTPS
 # ------------------------------
 server {
-  server_name johnflorentinodunglao.com www.johnflorentinodunglao.com;
+  # server_name johnflorentinodunglao.com www.johnflorentinodunglao.com;
 
   # include /etc/nginx/templates/configs/ssl.conf*;
   # include /etc/nginx/templates/configs/headers.conf;
