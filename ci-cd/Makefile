@@ -17,6 +17,7 @@ certbot-obtain:
 certbot-renew:
 	echo "Renewing SSL certificates..."
 	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production up certbot-renewal
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production exec -it nginx nginx -s reload
 	echo "Renewed SSL certificates successfully."
 
 access:
