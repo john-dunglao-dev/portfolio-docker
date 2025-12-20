@@ -79,6 +79,7 @@ services:
     volumes:
       - certbot_webroot:/var/www/certbot
       - nginx_ssl_certs:/etc/letsencrypt
+    env_file: .env.production
     command: >
       certonly
       --webroot
