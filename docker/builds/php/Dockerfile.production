@@ -1,10 +1,20 @@
-FROM composer:2 AS build
+FROM composer:2.8.12 AS build
 WORKDIR /app
 
-COPY ./php_app/php_application/composer.json ./
-COPY ./php_app/php_application/composer.lock ./
+# Copy composer files first for dependency caching
+COPY ./php_app/php_application/composer.json ./composer.json
+COPY ./php_app/php_application/composer.lock ./composer.lock
 
-RUN composer install --no-dev --optimize-autoloader
+# Verify composer files and install dependencies
+RUN composer install \
+        --no-dev \
+        --optimize-autoloader \
+        --no-interaction \
+        --prefer-dist \
+        --no-scripts \
+        --no-progress \
+        --no-suggest
+
 COPY ./php_app/php_application .
 
 # use PHP 8.3
