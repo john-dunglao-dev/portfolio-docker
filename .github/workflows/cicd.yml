@@ -7,6 +7,10 @@ on:
   repository_dispatch:
     types: [submodule_updated]
 
+concurrency:
+  group: "portfolio-cicd-pipeline"
+  cancel-in-progress: true
+
 jobs:
   build:
     name: (CI) Build Containers and Push to Docker Registry
