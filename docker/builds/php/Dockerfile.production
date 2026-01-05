@@ -1,3 +1,12 @@
+FROM composer:2 AS build
+WORKDIR /app
+
+COPY ./php_app/php_application/composer.json ./
+COPY ./php_app/php_application/composer-lock.json ./
+
+RUN composer install --no-dev --optimize-autoloader
+COPY ./php_app/php_application .
+
 # use PHP 8.3
 FROM php:8.3-fpm
 
@@ -40,17 +49,9 @@ RUN docker-php-ext-install -j$(nproc) \
     zip \
     xml
 
-# install composer
-COPY --from=composer:2.8.12 /usr/bin/composer /usr/local/bin/composer
-
-# Add composer global bin to PATH
-ENV PATH="${PATH}:/root/.composer/vendor/bin"
-
 WORKDIR /var/www/html
 
-COPY ./php_app/php_application .
-
-RUN composer install
+COPY --from=build /app ./
 
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
