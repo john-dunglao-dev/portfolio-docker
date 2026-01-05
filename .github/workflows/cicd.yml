@@ -5,7 +5,7 @@ on:
     branches:
       - main
   repository_dispatch:
-    types: [submodule-updated]
+    types: [submodule_updated]
 
 jobs:
   build:
