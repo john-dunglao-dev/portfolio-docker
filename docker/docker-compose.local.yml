@@ -33,7 +33,7 @@ services:
     stdin_open: true
     # comment this line if you don't want to run the frontend automatically
     # or when you are starting the container for the first time
-    command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
+    # command: /bin/sh -c "cd /var/www/html/vuejs && npm install && npm run dev"
     networks:
       - nodejs_frontend
 
@@ -90,26 +90,6 @@ services:
       - ./data/redis:/data
     networks:
       - php_backend
-  
-  certbot:
-    image: certbot/certbot
-    container_name: certbot_container
-    volumes:
-      - certbot_data:/var/www/certbot
-      - letsencrypt_data:/etc/letsencrypt
-    command: >
-      certonly
-      --webroot
-      -w /var/www/certbot
-      --email ${CERTBOT_EMAIL}
-      --agree-tos
-      --dry-run
-      -d johnflorentinodunglao.com
-      -d www.johnflorentinodunglao.com
-      -d php.johnflorentinodunglao.com
-      -d www.php.johnflorentinodunglao.com
-      -d vue.johnflorentinodunglao.com
-      -d www.vue.johnflorentinodunglao.com
 
 networks:
   php_backend:

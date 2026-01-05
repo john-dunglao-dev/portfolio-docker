@@ -5,7 +5,7 @@ on:
     branches:
       - main
   repository_dispatch:
-    types: [react-submodule-updated]
+    types: [submodule-updated]
 
 jobs:
   build:
