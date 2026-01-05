@@ -2,7 +2,7 @@ FROM composer:2 AS build
 WORKDIR /app
 
 COPY ./php_app/php_application/composer.json ./
-COPY ./php_app/php_application/composer-lock.json ./
+COPY ./php_app/php_application/composer.lock ./
 
 RUN composer install --no-dev --optimize-autoloader
 COPY ./php_app/php_application .
