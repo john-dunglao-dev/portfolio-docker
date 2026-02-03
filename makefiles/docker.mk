@@ -42,5 +42,8 @@ endif
 build:
 	$(COMPOSE_COMMAND) build .
 
+access-php:
+	$(COMPOSE_COMMAND) exec $(ARGUMENT)
+
 command:
 	$(COMPOSE_COMMAND) $(ARGUMENT)
