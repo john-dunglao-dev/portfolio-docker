@@ -74,6 +74,6 @@ jobs:
           key: ${{ secrets.GCP_VM_SSH_KEY }}
           script: |
             export GITHUB_SHA=${{ github.sha }}
+            echo "GITHUB_SHA=${GITHUB_SHA}" > .env
             cd ~/app
             make server-deploy
-    
