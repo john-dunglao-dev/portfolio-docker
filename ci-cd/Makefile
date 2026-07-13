@@ -5,23 +5,23 @@ server-deploy:
 	docker compose -f server-setup.yml down
 	docker system prune -af
 
-	docker compose -f server-setup.yml pull
-	docker compose -f server-setup.yml --env-file .env.production up -d --remove-orphans
+	docker compose -f server-setup.yml --env-file .env.production --env-file .env pull
+	docker compose -f server-setup.yml --env-file .env.production --env-file .env up -d --remove-orphans
 	echo "Deployed to server successfully."
 
 certbot-obtain:
 	echo "Obtaining SSL certificates..."
-	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production up certbot
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production --env-file .env up certbot
 	echo "Obtained SSL certificates successfully."
 
 certbot-renew:
 	echo "Renewing SSL certificates..."
-	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production up certbot-renewal
-	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production exec -it nginx nginx -s reload
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production --env-file .env up certbot-renewal
+	docker compose -f server-setup.yml -f certbot.yml --env-file .env.production --env-file .env exec -it nginx nginx -s reload
 	echo "Renewed SSL certificates successfully."
 
 access:
-	docker compose -f server-setup.yml --env-file .env.production exec -it $(ARGUMENT)
+	docker compose -f server-setup.yml --env-file .env.production --env-file .env exec -it $(ARGUMENT)
 
 command:
-	docker compose -f server-setup.yml --env-file .env.production $(ARGUMENT)
+	docker compose -f server-setup.yml --env-file .env.production --env-file .env $(ARGUMENT)
