@@ -73,14 +73,14 @@ services:
       certonly
       --webroot
       -w /var/www/certbot
-      --email ${CERTBOT_EMAIL}
+      --email "${CERTBOT_EMAIL}"
       --agree-tos
-      -d johnflorentinodunglao.com
-      -d www.johnflorentinodunglao.com
-      -d php.johnflorentinodunglao.com
-      -d www.php.johnflorentinodunglao.com
-      -d vue.johnflorentinodunglao.com
-      -d www.vue.johnflorentinodunglao.com
+      -d "johnflorentinodunglao.com"
+      -d "www.johnflorentinodunglao.com"
+      -d "php.johnflorentinodunglao.com"
+      -d "www.php.johnflorentinodunglao.com"
+      -d "vue.johnflorentinodunglao.com"
+      -d "www.vue.johnflorentinodunglao.com"
     networks:
       - frontend
 
